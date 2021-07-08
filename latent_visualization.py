@@ -100,25 +100,17 @@ def main():
     y = np.concatenate(label_list)
     print(X.shape)
     print(y.shape)
-    feat_cols = [ 'pixel'+str(i) for i in range(X.shape[1]) ]
-    df = pd.DataFrame(X,columns=feat_cols)
-    df['y'] = y
-    df['label'] = df['y'].apply(lambda i: str(i))
-    X, y = None, None
-    print('Size of the dataframe: {}'.format(df.shape))
-    data_subset = df[feat_cols].values
 
     tsne = TSNE(n_components=args.n_components, verbose=1, perplexity=args.perplexity, n_iter=args.n_iter)
-    tsne_results = tsne.fit_transform(data_subset)
+    tsne_results = tsne.fit_transform(X)
 
     plt.figure(figsize=(16,10))
     sns.scatterplot(
-        x=tsne_results[:,1], y=tsne_results[:,2],
-        hue="y",
-        data=df,
+        x=tsne_results[:,0], y=tsne_results[:,1],
+        hue=y,
         palette="Set1",
         legend="full",
-        alpha=0.3
+        alpha=0.5
     )
     plt.savefig(os.path.join(args.path_save,"t-SNE.png"))
 
